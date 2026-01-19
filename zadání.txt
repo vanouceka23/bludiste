@@ -1,0 +1,48 @@
+Copilot, vytvoř kompletní webový projekt s backendem a frontendem.
+
+Cíl aplikace:
+Webová hra s náhodně generovaným bludištěm, kde se uživatel musí dostat ze startu do cíle.
+Každý přihlášený uživatel má své vlastní, nezávislé bludiště.
+
+Technologie:
+- Backend: Node.js + Express
+- Frontend: HTML, CSS, vanilla JavaScript
+- Komunikace: REST API (JSON)
+- Autentizace: jednoduchý login a registrace (session nebo JWT)
+
+Funkčnost backendu:
+- Registrace a přihlášení uživatele
+- Pro každého uživatele vygenerovat vlastní náhodné bludiště (2D pole)
+- Uchovávat stav uživatele (pozice hráče, bludiště)
+- API endpoint pro získání bludiště
+- API endpoint pro pohyb hráče na základě kliknutí
+- Validace pohybu (nelze projít zdí)
+- Detekce dosažení cíle
+
+Funkčnost frontendu:
+- Přihlašovací a registrační formulář
+- Po přihlášení zobrazit bludiště jako klikací mřížku
+- Pohyb hráče kliknutím na jednu ze stran bludiště (může být i do bludiště) a nebo klávesami w a s d
+- Vizualizace zdí, hráče, startu a cíle
+- Zobrazení zprávy při dosažení cíle
+
+projekt/
+├── node_modules/
+├── package.json              
+└──app/           
+│   ├── index.js          
+│   ├── routers/       
+│   ├── controlers/          
+│   ├── middleware/            
+│   └── views/           
+├── README.md                  
+└── zadání.txt                 
+
+
+Požadavky:
+- Jednoduchý, srozumitelný kód
+- Komentáře v kódu
+- Bez externí databáze (in-memory storage)
+- Projekt musí jít spustit lokálně pomocí npm install a npm start
+
+Vygeneruj celý projekt najednou.

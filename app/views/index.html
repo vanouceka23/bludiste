@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎮 Hra Bludiště</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Autentizace -->
+    <div id="authContainer" class="container">
+      <div class="auth-box">
+        <h1>🎮 Hra Bludiště</h1>
+        
+        <div id="loginForm" class="auth-form">
+          <h2>Přihlášení</h2>
+          <input type="text" id="loginUsername" placeholder="Uživatelské jméno" required>
+          <input type="password" id="loginPassword" placeholder="Heslo" required>
+          <button onclick="login()">Přihlásit se</button>
+          <p class="toggle-text">Nemáš účet? <a href="#" onclick="toggleForms()">Zaregistruj se</a></p>
+        </div>
+
+        <div id="registerForm" class="auth-form" style="display: none;">
+          <h2>Registrace</h2>
+          <input type="text" id="registerUsername" placeholder="Uživatelské jméno" required>
+          <input type="password" id="registerPassword" placeholder="Heslo" required>
+          <button onclick="register()">Zaregistrovat se</button>
+          <p class="toggle-text">Máš účet? <a href="#" onclick="toggleForms()">Přihláš se</a></p>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+      </div>
+    </div>
+
+    <!-- Hra -->
+    <div id="gameContainer" class="container" style="display: none;">
+      <div class="game-box">
+        <h1>🎮 Bludiště</h1>
+        <div id="mazeContainer" class="maze-container"></div>
+        <div class="game-info">
+          <p><strong>Ovládání:</strong></p>
+          <p>🎯 Klikni na políčko nebo použij <strong>W</strong>, <strong>A</strong>, <strong>S</strong>, <strong>D</strong></p>
+          <p>✅ Dosáhni cíle (zelená políčka) <br>
+             🚫 Vyhni se zdím (tmavé políčka) <br>
+             🟦 Tvá pozice (modrá políčka)</p>
+        </div>
+        <div id="messageBox" class="message-box"></div>
+        <button onclick="logout()">Odhlásit se</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
