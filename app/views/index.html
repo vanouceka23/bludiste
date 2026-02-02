@@ -37,7 +37,31 @@
     <div id="gameContainer" class="container" style="display: none;">
       <div class="game-box">
         <h1>🎮 Bludiště</h1>
-        <div id="mazeContainer" class="maze-container"></div>
+        
+        <div class="maze-controls">
+          <div class="size-controls">
+            <div class="size-input">
+              <label for="mazeWidth">Šírka: <span id="widthValue">15</span></label>
+              <input type="range" id="mazeWidth" min="7" max="51" step="2" value="15">
+            </div>
+            <div class="size-input">
+              <label for="mazeHeight">Výška: <span id="heightValue">15</span></label>
+              <input type="range" id="mazeHeight" min="7" max="51" step="2" value="15">
+            </div>
+          </div>
+          <button onclick="changeMazeSize()">Nová hra</button>
+        </div>
+
+        <canvas id="mazeCanvas"></canvas>
+        
+        <div id="victoryModal" class="victory-modal" style="display: none;">
+          <div class="victory-content">
+            <h2>🎉 Dosáhl jsi cíle! 🎉</h2>
+            <p>Gratuluji! Vyhrál jsi!</p>
+            <button onclick="initMaze()">Hrát znovu</button>
+          </div>
+        </div>
+        
         <div class="game-info">
           <p><strong>Ovládání:</strong></p>
           <p>🎯 Klikni na políčko nebo použij <strong>W</strong>, <strong>A</strong>, <strong>S</strong>, <strong>D</strong></p>

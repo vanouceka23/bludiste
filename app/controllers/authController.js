@@ -14,8 +14,11 @@ function register(username, password) {
   users.set(username, {
     password,
     maze: null,
+    startPos: null,
     playerPos: null,
     goalPos: null,
+    portalA: null,
+    portalB: null,
   });
 
   return { success: true, message: 'Registrace úspěšná', userId: username };

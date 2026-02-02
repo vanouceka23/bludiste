@@ -23,6 +23,9 @@ Webová hra, kde se hráč musí dostat z určeného startu na cíl v náhodně 
   - 🟦 Modrá - pozice hráče
   - ⬛ Tmavě šedá - zdi
   - 🟩 Zelená - cíl
+  - 🟧 Oranžová se šipkou - jednosměrná propust
+  - 🟦 Modrá s "A" - portál A
+  - 🟪 Purpurová s "B" - portál B
   - Světlá - volné cesty
 - ✅ Zobrazení zprávy při dosažení cíle
 - ✅ Možnost hrát znovu
@@ -107,6 +110,15 @@ Server běží na portu 3000 a slouží jak frontend, tak backend.
 - Nemůžeš projít **zdmi** (tmavá políčka)
 - Cíl dosáhneš, když se dostaneš na **zelenou políčko**
 - Bludiště se generuje **náhodně** pokaždé
+- **Jednosměrné propusti** (oranžová se šipkou):
+  - Můžeš vstoupit **pouze z jedné strany** (opačně než směr šipky)
+  - Když vstoupíš, okamžitě tě propust **vyhodí na druhou stranu**
+- **Portály** (modrý A a purpurový B):
+  - Vstoupíš-li na portál A → teleportuješ se na portál B
+  - Vstoupíš-li na portál B → teleportuješ se na portál A
+  - Z portálu B můžeš odejít **kamkoliv** (není povinný)
+  - Portály nejsou **povinné** pro dosažení cíle
+- **Start a cíl** - mohou být umístěny v **rozích** nebo **ve středu** bludiště
 
 ## ⚙️ API Endpointy
 

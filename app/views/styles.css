@@ -5,38 +5,121 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Georgia', serif;
+  background: linear-gradient(135deg, #3a3a2e 0%, #2a2a1e 50%, #3a3a2e 100%);
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #c9b89d;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Kamenná textura pozadí */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(76, 110, 90, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(101, 120, 85, 0.1) 0%, transparent 50%),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 35px,
+      rgba(0, 0, 0, 0.05) 35px,
+      rgba(0, 0, 0, 0.05) 70px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Mech/trhliny efekt */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 1px,
+      rgba(120, 140, 100, 0.03) 1px,
+      rgba(120, 140, 100, 0.03) 2px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 1px,
+      rgba(120, 140, 100, 0.03) 1px,
+      rgba(120, 140, 100, 0.03) 2px
+    );
+  pointer-events: none;
+  z-index: 0;
 }
 
 .container {
   width: 100%;
-  max-width: 800px;
+  max-width: 900px;
   padding: 20px;
+  position: relative;
+  z-index: 2;
 }
 
 .auth-box, .game-box {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  padding: 40px;
+  background: linear-gradient(135deg, #4a4a38 0%, #3a3a2e 50%, #4a4a38 100%);
+  border: 4px solid #6b7355;
+  border-radius: 8px;
+  box-shadow: 
+    0 0 30px rgba(0, 0, 0, 0.7),
+    inset 0 0 40px rgba(120, 140, 100, 0.2),
+    inset 0 0 20px rgba(0, 0, 0, 0.3);
+  padding: 50px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Praskliny v kamenech */
+.auth-box::before, .game-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(90deg, transparent 24%, rgba(76, 68, 50, 0.05) 25%, rgba(76, 68, 50, 0.05) 26%, transparent 27%, transparent 74%, rgba(76, 68, 50, 0.05) 75%, rgba(76, 68, 50, 0.05) 76%, transparent 77%, transparent),
+    linear-gradient(0deg, transparent 24%, rgba(76, 68, 50, 0.05) 25%, rgba(76, 68, 50, 0.05) 26%, transparent 27%, transparent 74%, rgba(76, 68, 50, 0.05) 75%, rgba(76, 68, 50, 0.05) 76%, transparent 77%, transparent);
+  background-size: 50px 50px;
+  pointer-events: none;
+}
+
+.auth-box, .game-box {
+  z-index: 1;
 }
 
 h1 {
-  color: #333;
+  color: #8b9d7f;
   margin-bottom: 30px;
-  font-size: 32px;
+  font-size: 40px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  font-weight: bold;
+  letter-spacing: 2px;
 }
 
 h2 {
-  color: #667eea;
+  color: #a8c97f;
   margin-bottom: 20px;
   font-size: 24px;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
 }
 
 .auth-form {
@@ -48,55 +131,67 @@ h2 {
 input {
   padding: 12px;
   font-size: 16px;
-  border: 2px solid #ddd;
-  border-radius: 5px;
-  transition: border-color 0.3s;
+  border: 2px solid #6b7355;
+  border-radius: 3px;
+  background: rgba(58, 58, 46, 0.6);
+  color: #c9b89d;
+  transition: all 0.3s;
+  font-family: 'Georgia', serif;
 }
 
 input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #a8c97f;
+  box-shadow: 0 0 10px rgba(168, 201, 127, 0.3);
 }
 
 button {
   padding: 12px 30px;
   font-size: 16px;
   font-weight: bold;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  background: linear-gradient(135deg, #7a8c6f 0%, #6b7355 100%);
+  color: #f5f5f0;
+  border: 2px solid #6b7355;
+  border-radius: 3px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s;
   margin-top: 10px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  font-family: 'Georgia', serif;
 }
 
 button:hover {
-  background: #764ba2;
+  background: linear-gradient(135deg, #8a9c7f 0%, #7a8c6f 100%);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
 }
 
 .toggle-text {
   font-size: 14px;
-  color: #666;
+  color: #a8b898;
   margin-top: 10px;
 }
 
 .toggle-text a {
-  color: #667eea;
+  color: #a8c97f;
   text-decoration: none;
   font-weight: bold;
   cursor: pointer;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .toggle-text a:hover {
   text-decoration: underline;
+  color: #c4e89f;
 }
 
 .error-message {
-  color: #e74c3c;
+  color: #d4755e;
   font-size: 14px;
   margin-top: 15px;
   min-height: 20px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .maze-container {
@@ -109,61 +204,71 @@ button:hover {
   cursor: pointer;
 }
 
-.maze-row {
-  display: flex;
-  margin-bottom: 2px;
-}
-
-.maze-cell {
-  width: 30px;
-  height: 30px;
-  border: 1px solid #ccc;
-  margin: 1px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  border-radius: 3px;
-}
-
-/* Cesta */
-.maze-cell.path {
-  background: #ecf0f1;
-}
-
-.maze-cell.path:hover {
-  background: #bdc3c7;
-}
-
-/* Zeď */
-.maze-cell.wall {
-  background: #2c3e50;
-}
-
-/* Hráč */
-.maze-cell.player {
-  background: #3498db;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-/* Cíl */
-.maze-cell.goal {
-  background: #2ecc71;
-  font-size: 18px;
-  font-weight: bold;
-}
-
 .game-info {
-  background: #f8f9fa;
+  background: linear-gradient(135deg, rgba(168, 201, 127, 0.1) 0%, rgba(139, 157, 127, 0.1) 100%);
   padding: 15px;
   border-radius: 5px;
   margin: 20px 0;
   text-align: left;
   font-size: 14px;
   line-height: 1.6;
-  color: #333;
+  color: #a8b898;
+  border: 2px solid #6b7355;
+  box-shadow: inset 0 0 10px rgba(120, 140, 100, 0.2);
+}
+
+.maze-controls {
+  background: linear-gradient(135deg, rgba(168, 201, 127, 0.1) 0%, rgba(139, 157, 127, 0.1) 100%);
+  padding: 20px;
+  border-radius: 5px;
+  margin: 20px 0;
+  text-align: center;
+  border: 2px solid #6b7355;
+  box-shadow: inset 0 0 10px rgba(120, 140, 100, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.size-controls {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.size-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.size-input label {
+  font-weight: bold;
+  color: #a8c97f;
+  font-size: 14px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.size-input input[type="range"] {
+  width: 150px;
+  accent-color: #a8c97f;
+}
+
+.maze-controls button {
+  margin-top: 10px;
+  padding: 10px 30px;
+  font-size: 16px;
+}
+
+#mazeCanvas {
+  border: 3px solid #6b7355;
+  background: linear-gradient(135deg, #2a2a1e 0%, #3a3a28 100%);
+  display: block;
+  margin: 20px auto;
+  border-radius: 5px;
+  cursor: pointer;
+  max-width: 100%;
+  height: auto;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(120, 140, 100, 0.1);
 }
 
 .message-box {
@@ -173,18 +278,128 @@ button:hover {
   margin: 20px 0;
   border-radius: 5px;
   min-height: 20px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 .message-box.success {
-  background: #d4edda;
-  color: #155724;
-  border: 2px solid #2ecc71;
+  background: linear-gradient(135deg, rgba(168, 201, 127, 0.2) 0%, rgba(168, 201, 127, 0.1) 100%);
+  color: #a8c97f;
+  border: 2px solid #a8c97f;
+  box-shadow: 0 0 15px rgba(168, 201, 127, 0.3);
 }
 
 .message-box.error {
-  background: #f8d7da;
-  color: #721c24;
-  border: 2px solid #e74c3c;
+  background: linear-gradient(135deg, rgba(184, 134, 100, 0.2) 0%, rgba(184, 134, 100, 0.1) 100%);
+  color: #d4a574;
+  border: 2px solid #d4a574;
+  box-shadow: 0 0 15px rgba(184, 134, 100, 0.3);
+}
+
+.message-box.death {
+  background: linear-gradient(135deg, rgba(212, 117, 94, 0.3) 0%, rgba(192, 92, 71, 0.2) 100%);
+  color: #e8a99f;
+  border: 2px solid #d4755e;
+  box-shadow: 0 0 20px rgba(212, 117, 94, 0.5);
+}
+
+.victory-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.victory-content {
+  background: linear-gradient(135deg, #4a4a38 0%, #3a3a2e 50%, #4a4a38 100%);
+  padding: 50px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 0 30px rgba(168, 201, 127, 0.2),
+    inset 0 0 30px rgba(168, 201, 127, 0.1);
+  animation: bounceIn 0.6s ease-out;
+  border: 3px solid #a8c97f;
+}
+
+.victory-content h2 {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #a8c97f;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.victory-content p {
+  font-size: 24px;
+  color: #c9b89d;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.7);
+}
+
+.victory-content button {
+  padding: 15px 40px;
+  font-size: 18px;
+  background: linear-gradient(135deg, #a8c97f 0%, #8a9d6f 100%);
+  color: #0f0f0f;
+  border: 2px solid #a8c97f;
+  font-weight: bold;
+}
+
+.victory-content button:hover {
+  background: linear-gradient(135deg, #8a9d6f 0%, #7a8c5f 100%);
+  box-shadow: 0 0 20px rgba(168, 201, 127, 0.6);
+}
+
+@keyframes bounce In {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  animation: fall 3s ease-in forwards;
+  z-index: 999;
+}
+
+.game-box button {
+  margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  .auth-box, .game-box {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  input, button {
+    font-size: 14px;
+    padding: 10px;
+  }
 }
 
 .game-box button {

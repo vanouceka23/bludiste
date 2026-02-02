@@ -4,13 +4,13 @@ const { initMaze, getMaze, movePlayer } = require('../controllers/mazeController
 
 // Inicializace nového bludiště pro uživatele
 router.post('/maze/init', (req, res) => {
-  const { userId } = req.body;
+  const { userId, width, height } = req.body;
 
   if (!userId) {
     return res.status(400).json({ success: false, error: 'UserId je povinné' });
   }
 
-  const result = initMaze(userId);
+  const result = initMaze(userId, width || 15, height || 15);
   
   if (!result.success) {
     return res.status(400).json(result);
