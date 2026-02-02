@@ -136,13 +136,12 @@ function generateMaze(width = 15, height = 15) {
         }
       }
 
-      // Přidej jednosměrné propusti - VYPNUTO (brání dosažení cíle)
-      // Propusti zůstávají v herní logice ale negenerují se automaticky
+      // Přidej jednosměrné propusti - VYPNUTO
       /*
       const directions = ['up', 'down', 'left', 'right'];
       for (let y = 1; y < height - 1; y++) {
         for (let x = 1; x < width - 1; x++) {
-          if (maze[y][x].type === 0 && Math.random() < 0.15) {
+          if (maze[y][x].type === 0 && Math.random() < 0.40) {
             const randomDir = directions[Math.floor(Math.random() * directions.length)];
             const originalCell = maze[y][x];
             maze[y][x] = { type: 3, direction: randomDir };

@@ -18,7 +18,7 @@
           <input type="text" id="loginUsername" placeholder="Uživatelské jméno" required>
           <input type="password" id="loginPassword" placeholder="Heslo" required>
           <button onclick="login()">Přihlásit se</button>
-          <p class="toggle-text">Nemáš účet? <a href="#" onclick="toggleForms()">Zaregistruj se</a></p>
+          <p class="toggle-text">Nemáš účet? <a href="javascript:void(0);" onclick="toggleForms(); return false;">Zaregistruj se</a></p>
         </div>
 
         <div id="registerForm" class="auth-form" style="display: none;">
@@ -26,7 +26,7 @@
           <input type="text" id="registerUsername" placeholder="Uživatelské jméno" required>
           <input type="password" id="registerPassword" placeholder="Heslo" required>
           <button onclick="register()">Zaregistrovat se</button>
-          <p class="toggle-text">Máš účet? <a href="#" onclick="toggleForms()">Přihláš se</a></p>
+          <p class="toggle-text">Máš účet? <a href="javascript:void(0);" onclick="toggleForms(); return false;">Přihláš se</a></p>
         </div>
 
         <div id="errorMessage" class="error-message"></div>
@@ -50,6 +50,12 @@
             </div>
           </div>
           <button onclick="changeMazeSize()">Nová hra</button>
+          <button id="darkModeToggle" onclick="toggleDarkMode()" class="dark-mode-btn">🌙 Tma vypnutá</button>
+          <button id="zoomToggle" onclick="toggleZoom()" class="zoom-btn">👁️ Zoom vypnutý</button>
+          <div class="zoom-level-control" id="zoomLevelControl" style="display: none;">
+            <label for="zoomLevel">Zoom úroveň: <span id="zoomLevelValue">10</span></label>
+            <input type="range" id="zoomLevel" min="5" max="20" step="1" value="10" oninput="changeZoomLevel(this.value)">
+          </div>
         </div>
 
         <canvas id="mazeCanvas"></canvas>
@@ -73,8 +79,11 @@
         <button onclick="logout()">Odhlásit se</button>
       </div>
     </div>
+  <div id="jumpscare" class="jumpscare" style="display: none;">
+    <div class="jumpscare-content">
+      👹
+    </div>
   </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
