@@ -3,12 +3,16 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 const { logger } = require('./middleware/logger');
+const { initDB } = require('./db');
 
 const authRoutes = require('./routers/authRoutes');
 const mazeRoutes = require('./routers/mazeRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Inicializuj databázi
+initDB();
 
 // Middleware
 app.use(cors());

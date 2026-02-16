@@ -1,6 +1,10 @@
-// Správa bludišť - in-memory storage
+// Správa bludišť s JSON databází
 const { generateMaze } = require('../mazeGenerator');
 const { getUser } = require('./authController');
+const db = require('../db');
+
+// In-memory storage pro bludiště během hry (není v databázi!)
+const mazeStorage = new Map(); // userId -> { maze, startPos, goalPos, playerPos, portalA, portalB }
 
 // Inicializace nového bludiště pro uživatele
 function initMaze(userId, width = 15, height = 15) {
@@ -19,12 +23,15 @@ function initMaze(userId, width = 15, height = 15) {
 
   const { maze, startPos, goalPos, portalA, portalB } = generateMaze(width, height);
 
-  user.maze = maze;
-  user.startPos = startPos;
-  user.playerPos = startPos;
-  user.goalPos = goalPos;
-  user.portalA = portalA;
-  user.portalB = portalB;
+  // Ulož bludiště v paměti (nikoli v databázi!)
+  mazeStorage.set(userId, {
+    maze,
+    startPos,
+    playerPos: startPos,
+    goalPos,
+    portalA,
+    portalB,
+  });
 
   return {
     success: true,
@@ -40,33 +47,33 @@ function initMaze(userId, width = 15, height = 15) {
 
 // Získej bludiště a pozici hráče
 function getMaze(userId) {
-  const user = getUser(userId);
+  const mazeData = mazeStorage.get(userId);
 
-  if (!user || !user.maze) {
+  if (!mazeData) {
     return { success: false, error: 'Bludiště nenalezeno' };
   }
 
   return {
     success: true,
-    maze: user.maze,
-    playerPos: user.playerPos,
-    goalPos: user.goalPos,
-    portalA: user.portalA,
-    portalB: user.portalB,
-    width: user.maze[0].length,
-    height: user.maze.length,
+    maze: mazeData.maze,
+    playerPos: mazeData.playerPos,
+    goalPos: mazeData.goalPos,
+    portalA: mazeData.portalA,
+    portalB: mazeData.portalB,
+    width: mazeData.maze[0].length,
+    height: mazeData.maze.length,
   };
 }
 
 // Pohyb hráče
 function movePlayer(userId, x, y) {
-  const user = getUser(userId);
+  const mazeData = mazeStorage.get(userId);
 
-  if (!user || !user.maze) {
+  if (!mazeData) {
     return { success: false, error: 'Bludiště nenalezeno' };
   }
 
-  const { maze, playerPos, goalPos } = user;
+  const { maze, playerPos, goalPos, startPos } = mazeData;
 
   // Kontrola, zda je cílová pozice v poli
   if (x < 0 || x >= maze[0].length || y < 0 || y >= maze.length) {
@@ -88,12 +95,23 @@ function movePlayer(userId, x, y) {
 
   // Speciální zdi - hráč umírá
   if (cell.type === 2) {
-    user.playerPos = user.startPos;
+    const newPlayerPos = startPos;
+    const dbUser = getUser(userId); // Přečti staré hodnoty z databáze
+    mazeData.playerPos = newPlayerPos;
+    const updatedUser = db.updateUser(userId, { 
+      deaths: (dbUser.deaths || 0) + 1,
+      steps: (dbUser.steps || 0) + 1,
+    });
     return { 
       success: true, 
-      playerPos: user.startPos,
+      playerPos: newPlayerPos,
       died: true,
       message: '💀 Narazil jsi na trny! Začínáš znovu...',
+      stats: {
+        completedMazes: updatedUser.data.completedMazes || 0,
+        deaths: updatedUser.data.deaths || 0,
+        steps: updatedUser.data.steps || 0,
+      }
     };
   }
 
@@ -134,66 +152,106 @@ function movePlayer(userId, x, y) {
     }
 
     // Přesuň hráče na výstupní pozici
-    user.playerPos = { x: finalX, y: finalY };
-
+    mazeData.playerPos = { x: finalX, y: finalY };
+    
     // Kontrola cíle
     const reachedGoal = finalX === goalPos.x && finalY === goalPos.y;
+
+    const dbUser = getUser(userId);
+    const updatedUser = db.updateUser(userId, { 
+      steps: (dbUser.steps || 0) + 1,
+      ...(reachedGoal && { completedMazes: (dbUser.completedMazes || 0) + 1 })
+    });
 
     return {
       success: true,
       playerPos: { x: finalX, y: finalY },
       reachedGoal,
       message: reachedGoal ? '🎉 Dosáhl jsi cíle! Gratuluji!' : 'Prošel jsi propustí',
+      stats: {
+        completedMazes: updatedUser.data.completedMazes || 0,
+        deaths: updatedUser.data.deaths || 0,
+        steps: updatedUser.data.steps || 0,
+      }
     };
   }
 
   // Portál A - přesun na portál B
   if (cell.type === 4) {
-    if (!user.portalB) {
+    if (!mazeData.portalB) {
       return { success: false, error: 'Portál B nenalezen' };
     }
 
-    user.playerPos = { x: user.portalB.x, y: user.portalB.y };
+    mazeData.playerPos = { x: mazeData.portalB.x, y: mazeData.portalB.y };
+    const reachedGoal = mazeData.portalB.x === goalPos.x && mazeData.portalB.y === goalPos.y;
 
-    const reachedGoal = user.portalB.x === goalPos.x && user.portalB.y === goalPos.y;
+    const dbUser = getUser(userId);
+    const updatedUser = db.updateUser(userId, { 
+      steps: (dbUser.steps || 0) + 1,
+      ...(reachedGoal && { completedMazes: (dbUser.completedMazes || 0) + 1 })
+    });
 
     return {
       success: true,
-      playerPos: { x: user.portalB.x, y: user.portalB.y },
+      playerPos: { x: mazeData.portalB.x, y: mazeData.portalB.y },
       reachedGoal,
       message: reachedGoal ? '🎉 Dosáhl jsi cíle! Gratuluji!' : '🌀 Teleportován na portál B',
+      stats: {
+        completedMazes: updatedUser.data.completedMazes || 0,
+        deaths: updatedUser.data.deaths || 0,
+        steps: updatedUser.data.steps || 0,
+      }
     };
   }
 
   // Portál B - přesun na portál A
   if (cell.type === 5) {
-    if (!user.portalA) {
+    if (!mazeData.portalA) {
       return { success: false, error: 'Portál A nenalezen' };
     }
 
-    user.playerPos = { x: user.portalA.x, y: user.portalA.y };
+    mazeData.playerPos = { x: mazeData.portalA.x, y: mazeData.portalA.y };
+    const reachedGoal = mazeData.portalA.x === goalPos.x && mazeData.portalA.y === goalPos.y;
 
-    const reachedGoal = user.portalA.x === goalPos.x && user.portalA.y === goalPos.y;
+    const dbUser = getUser(userId);
+    const updatedUser = db.updateUser(userId, { 
+      steps: (dbUser.steps || 0) + 1,
+      ...(reachedGoal && { completedMazes: (dbUser.completedMazes || 0) + 1 })
+    });
 
     return {
       success: true,
-      playerPos: { x: user.portalA.x, y: user.portalA.y },
+      playerPos: { x: mazeData.portalA.x, y: mazeData.portalA.y },
       reachedGoal,
       message: reachedGoal ? '🎉 Dosáhl jsi cíle! Gratuluji!' : '🌀 Teleportován na portál A',
+      stats: {
+        completedMazes: updatedUser.data.completedMazes || 0,
+        deaths: updatedUser.data.deaths || 0,
+        steps: updatedUser.data.steps || 0,
+      }
     };
   }
 
   // Normální pohyb na volné pole
-  user.playerPos = { x, y };
-
-  // Kontrola, zda hráč dosáhl cíle
+  mazeData.playerPos = { x, y };
   const reachedGoal = x === goalPos.x && y === goalPos.y;
+
+  const dbUser = getUser(userId);
+  const updatedUser = db.updateUser(userId, { 
+    steps: (dbUser.steps || 0) + 1,
+    ...(reachedGoal && { completedMazes: (dbUser.completedMazes || 0) + 1 })
+  });
 
   return {
     success: true,
     playerPos: { x, y },
     reachedGoal,
     message: reachedGoal ? '🎉 Dosáhl jsi cíle! Gratuluji!' : 'Pohyb proveden',
+    stats: {
+      completedMazes: updatedUser.data.completedMazes || 0,
+      deaths: updatedUser.data.deaths || 0,
+      steps: updatedUser.data.steps || 0,
+    }
   };
 }
 

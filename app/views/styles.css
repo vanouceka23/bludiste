@@ -115,6 +115,46 @@ h1 {
   letter-spacing: 2px;
 }
 
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.stats-panel {
+  display: flex;
+  gap: 20px;
+  background: linear-gradient(135deg, rgba(168, 201, 127, 0.15) 0%, rgba(139, 157, 127, 0.15) 100%);
+  padding: 15px 20px;
+  border-radius: 5px;
+  border: 2px solid #6b7355;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #a8b898;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.stat-value {
+  font-size: 24px;
+  color: #a8c97f;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
 h2 {
   color: #a8c97f;
   margin-bottom: 20px;
@@ -479,6 +519,20 @@ button:hover {
   input, button {
     font-size: 14px;
     padding: 10px;
+  }
+
+  .game-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .stats-panel {
+    justify-content: space-around;
+  }
+
+  .stat-item {
+    flex: 1;
+    text-align: center;
   }
 }
 

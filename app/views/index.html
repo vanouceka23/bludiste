@@ -36,7 +36,23 @@
     <!-- Hra -->
     <div id="gameContainer" class="container" style="display: none;">
       <div class="game-box">
-        <h1>🎮 Bludiště</h1>
+        <div class="game-header">
+          <h1>🎮 Bludiště</h1>
+          <div class="stats-panel">
+            <div class="stat-item">
+              <span class="stat-label">🏆 Vítězství:</span>
+              <span class="stat-value" id="statsWins">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">💀 Smrti:</span>
+              <span class="stat-value" id="statsDeath">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">👣 Kroky:</span>
+              <span class="stat-value" id="statsMoves">0</span>
+            </div>
+          </div>
+        </div>
         
         <div class="maze-controls">
           <div class="size-controls">

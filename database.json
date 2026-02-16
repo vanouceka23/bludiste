@@ -1,0 +1,18 @@
+{
+  "users": {
+    "a": {
+      "username": "a",
+      "password": "$2b$10$7q7Ba1lkzIAZKwhmOJ.7c.FkveedtnNo1T.w1PQ3w6GVWgwSysZ12",
+      "completedMazes": 1000000009,
+      "deaths": 5,
+      "steps": 170
+    },
+    "b": {
+      "username": "b",
+      "password": "$2b$10$YmTdmIRIuPq6ukv.QIPbi.Atu0hW9sLjwJNwGmuC15UI3veAMkYUa",
+      "completedMazes": 0,
+      "deaths": 0,
+      "steps": 0
+    }
+  }
+}

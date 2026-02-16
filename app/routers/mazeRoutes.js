@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { initMaze, getMaze, movePlayer } = require('../controllers/mazeController');
+const { getUser } = require('../controllers/authController');
 
 // Inicializace nového bludiště pro uživatele
 router.post('/maze/init', (req, res) => {
@@ -46,6 +47,26 @@ router.post('/maze/move', (req, res) => {
   }
 
   res.json(result);
+});
+
+// Získej statistiky uživatele
+router.get('/stats/:userId', (req, res) => {
+  const { userId } = req.params;
+  const user = getUser(userId);
+
+  if (!user) {
+    return res.status(404).json({ success: false, error: 'Uživatel nenalezen' });
+  }
+
+  res.json({
+    success: true,
+    stats: {
+      username: user.username,
+      completedMazes: user.completedMazes || 0,
+      deaths: user.deaths || 0,
+      steps: user.steps || 0,
+    }
+  });
 });
 
 module.exports = router;

@@ -95,6 +95,9 @@ async function login() {
     document.getElementById('loginPassword').value = '';
     clearError();
 
+    // Načti statistiky
+    await loadStats();
+
     // Inicializuj bludiště
     await initMaze();
     
@@ -473,6 +476,13 @@ async function movePlayer(x, y) {
     // Aktualizuj novou pozici v mazeState
     mazeState.playerPos = data.playerPos;
     
+    // Aktualizuj statistiky pokud jsou v responsu
+    if (data.stats) {
+      document.getElementById('statsWins').textContent = data.stats.completedMazes || 0;
+      document.getElementById('statsDeath').textContent = data.stats.deaths || 0;
+      document.getElementById('statsMoves').textContent = data.stats.steps || 0;
+    }
+    
     // Spusť animaci
     isAnimating = true;
     playerAnimationProgress = 0;
@@ -717,7 +727,7 @@ function toggleZoom() {
 // Jumpscare efekt
 function triggerJumpscare() {
   // Malá šance na jumpscare - 30%
-  if (Math.random() > 0.3) return;
+  if (Math.random() > 0.01) return;
   
   const jumpscare = document.getElementById('jumpscare');
   jumpscare.style.display = 'flex';
@@ -854,7 +864,7 @@ function createConfetti() {
   }
 }
 
-// Slider event listeners
+// Sl ider event listeners
 document.addEventListener('DOMContentLoaded', () => {
   const mazeWidth = document.getElementById('mazeWidth');
   const mazeHeight = document.getElementById('mazeHeight');
@@ -871,3 +881,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// Načti a zobraz statistiky
+async function loadStats() {
+  try {
+    const response = await fetch(`${API_URL}/stats/${currentUserId}`);
+    const data = await response.json();
+
+    if (data.success) {
+      document.getElementById('statsWins').textContent = data.stats.completedMazes || 0;
+      document.getElementById('statsDeath').textContent = data.stats.deaths || 0;
+      document.getElementById('statsMoves').textContent = data.stats.steps || 0;
+    }
+  } catch (error) {
+    console.error('Chyba při načítání statistik:', error);
+  }
+}
+
+// Aktualizuj statistiky po pohybu
+function updateStatsUI(stats) {
+  if (stats) {
+    document.getElementById('statsWins').textContent = stats.completedMazes || 0;
+    document.getElementById('statsDeath').textContent = stats.deaths || 0;
+    document.getElementById('statsMoves').textContent = stats.steps || 0;
+  }
+}
