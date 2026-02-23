@@ -1,19 +1,21 @@
-// Autentizace s JSON databází
-const db = require('../db');
+// Autentizace s podporou JSON a PostgreSQL
+const db = process.env.DATABASE_URL 
+  ? require('../db-postgres-new') 
+  : require('../db');
 
 // Registrace
-function register(username, password) {
-  return db.registerUser(username, password);
+async function register(username, password) {
+  return await db.registerUser(username, password);
 }
 
 // Přihlášení
-function login(username, password) {
-  return db.loginUser(username, password);
+async function login(username, password) {
+  return await db.loginUser(username, password);
 }
 
 // Získej uživatele
-function getUser(userId) {
-  return db.getUser(userId);
+async function getUser(userId) {
+  return await db.getUser(userId);
 }
 
 module.exports = { register, login, getUser };

@@ -1,14 +1,17 @@
-// Správa bludišť s JSON databází
+// Správa bludišť s podporou JSON a PostgreSQL
 const { generateMaze } = require('../mazeGenerator');
 const { getUser } = require('./authController');
-const db = require('../db');
+
+const db = process.env.DATABASE_URL 
+  ? require('../db-postgres-new') 
+  : require('../db');
 
 // In-memory storage pro bludiště během hry (není v databázi!)
 const mazeStorage = new Map(); // userId -> { maze, startPos, goalPos, playerPos, portalA, portalB }
 
 // Inicializace nového bludiště pro uživatele
-function initMaze(userId, width = 15, height = 15) {
-  const user = getUser(userId);
+async function initMaze(userId, width = 15, height = 15) {
+  const user = await getUser(userId);
   
   if (!user) {
     return { success: false, error: 'Uživatel nenalezen' };
@@ -66,7 +69,7 @@ function getMaze(userId) {
 }
 
 // Pohyb hráče
-function movePlayer(userId, x, y) {
+async function movePlayer(userId, x, y) {
   const mazeData = mazeStorage.get(userId);
 
   if (!mazeData) {
@@ -96,21 +99,22 @@ function movePlayer(userId, x, y) {
   // Speciální zdi - hráč umírá
   if (cell.type === 2) {
     const newPlayerPos = startPos;
-    const dbUser = getUser(userId); // Přečti staré hodnoty z databáze
+    const dbUser = await getUser(userId); // Přečti staré hodnoty z databáze
     mazeData.playerPos = newPlayerPos;
-    const updatedUser = db.updateUser(userId, { 
+    const updatedUserResult = await db.updateUser(userId, { 
       deaths: (dbUser.deaths || 0) + 1,
       steps: (dbUser.steps || 0) + 1,
     });
+    const updatedUser = updatedUserResult.data;
     return { 
       success: true, 
       playerPos: newPlayerPos,
       died: true,
       message: '💀 Narazil jsi na trny! Začínáš znovu...',
       stats: {
-        completedMazes: updatedUser.data.completedMazes || 0,
-        deaths: updatedUser.data.deaths || 0,
-        steps: updatedUser.data.steps || 0,
+        completedMazes: updatedUser.completedMazes || 0,
+        deaths: updatedUser.deaths || 0,
+        steps: updatedUser.steps || 0,
       }
     };
   }
@@ -157,11 +161,12 @@ function movePlayer(userId, x, y) {
     // Kontrola cíle
     const reachedGoal = finalX === goalPos.x && finalY === goalPos.y;
 
-    const dbUser = getUser(userId);
-    const updatedUser = db.updateUser(userId, { 
+    const dbUser = await getUser(userId);
+    const updatedUserResult = await db.updateUser(userId, { 
       steps: (dbUser.steps || 0) + 1,
       ...(reachedGoal && { completedMazes: (dbUser.completedMazes || 0) + 1 })
     });
+    const updatedUser = updatedUserResult.data;
 
     return {
       success: true,
@@ -169,9 +174,9 @@ function movePlayer(userId, x, y) {
       reachedGoal,
       message: reachedGoal ? '🎉 Dosáhl jsi cíle! Gratuluji!' : 'Prošel jsi propustí',
       stats: {
-        completedMazes: updatedUser.data.completedMazes || 0,
-        deaths: updatedUser.data.deaths || 0,
-        steps: updatedUser.data.steps || 0,
+        completedMazes: updatedUser.completedMazes || 0,
+        deaths: updatedUser.deaths || 0,
+        steps: updatedUser.steps || 0,
       }
     };
   }
@@ -185,11 +190,12 @@ function movePlayer(userId, x, y) {
     mazeData.playerPos = { x: mazeData.portalB.x, y: mazeData.portalB.y };
     const reachedGoal = mazeData.portalB.x === goalPos.x && mazeData.portalB.y === goalPos.y;
 
-    const dbUser = getUser(userId);
-    const updatedUser = db.updateUser(userId, { 
+    const dbUser = await getUser(userId);
+    const updatedUserResult = await db.updateUser(userId, { 
       steps: (dbUser.steps || 0) + 1,
       ...(reachedGoal && { completedMazes: (dbUser.completedMazes || 0) + 1 })
     });
+    const updatedUser = updatedUserResult.data;
 
     return {
       success: true,
@@ -197,9 +203,9 @@ function movePlayer(userId, x, y) {
       reachedGoal,
       message: reachedGoal ? '🎉 Dosáhl jsi cíle! Gratuluji!' : '🌀 Teleportován na portál B',
       stats: {
-        completedMazes: updatedUser.data.completedMazes || 0,
-        deaths: updatedUser.data.deaths || 0,
-        steps: updatedUser.data.steps || 0,
+        completedMazes: updatedUser.completedMazes || 0,
+        deaths: updatedUser.deaths || 0,
+        steps: updatedUser.steps || 0,
       }
     };
   }
@@ -213,11 +219,12 @@ function movePlayer(userId, x, y) {
     mazeData.playerPos = { x: mazeData.portalA.x, y: mazeData.portalA.y };
     const reachedGoal = mazeData.portalA.x === goalPos.x && mazeData.portalA.y === goalPos.y;
 
-    const dbUser = getUser(userId);
-    const updatedUser = db.updateUser(userId, { 
+    const dbUser = await getUser(userId);
+    const updatedUserResult = await db.updateUser(userId, { 
       steps: (dbUser.steps || 0) + 1,
       ...(reachedGoal && { completedMazes: (dbUser.completedMazes || 0) + 1 })
     });
+    const updatedUser = updatedUserResult.data;
 
     return {
       success: true,
@@ -225,9 +232,9 @@ function movePlayer(userId, x, y) {
       reachedGoal,
       message: reachedGoal ? '🎉 Dosáhl jsi cíle! Gratuluji!' : '🌀 Teleportován na portál A',
       stats: {
-        completedMazes: updatedUser.data.completedMazes || 0,
-        deaths: updatedUser.data.deaths || 0,
-        steps: updatedUser.data.steps || 0,
+        completedMazes: updatedUser.completedMazes || 0,
+        deaths: updatedUser.deaths || 0,
+        steps: updatedUser.steps || 0,
       }
     };
   }
@@ -236,11 +243,12 @@ function movePlayer(userId, x, y) {
   mazeData.playerPos = { x, y };
   const reachedGoal = x === goalPos.x && y === goalPos.y;
 
-  const dbUser = getUser(userId);
-  const updatedUser = db.updateUser(userId, { 
+  const dbUser = await getUser(userId);
+  const updatedUserResult = await db.updateUser(userId, { 
     steps: (dbUser.steps || 0) + 1,
     ...(reachedGoal && { completedMazes: (dbUser.completedMazes || 0) + 1 })
   });
+  const updatedUser = updatedUserResult.data;
 
   return {
     success: true,
@@ -248,9 +256,9 @@ function movePlayer(userId, x, y) {
     reachedGoal,
     message: reachedGoal ? '🎉 Dosáhl jsi cíle! Gratuluji!' : 'Pohyb proveden',
     stats: {
-      completedMazes: updatedUser.data.completedMazes || 0,
-      deaths: updatedUser.data.deaths || 0,
-      steps: updatedUser.data.steps || 0,
+      completedMazes: updatedUser.completedMazes || 0,
+      deaths: updatedUser.deaths || 0,
+      steps: updatedUser.steps || 0,
     }
   };
 }

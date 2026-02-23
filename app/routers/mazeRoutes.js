@@ -4,14 +4,14 @@ const { initMaze, getMaze, movePlayer } = require('../controllers/mazeController
 const { getUser } = require('../controllers/authController');
 
 // Inicializace nového bludiště pro uživatele
-router.post('/maze/init', (req, res) => {
+router.post('/maze/init', async (req, res) => {
   const { userId, width, height } = req.body;
 
   if (!userId) {
     return res.status(400).json({ success: false, error: 'UserId je povinné' });
   }
 
-  const result = initMaze(userId, width || 15, height || 15);
+  const result = await initMaze(userId, width || 15, height || 15);
   
   if (!result.success) {
     return res.status(400).json(result);
@@ -33,14 +33,14 @@ router.get('/maze/:userId', (req, res) => {
 });
 
 // Pohyb hráče
-router.post('/maze/move', (req, res) => {
+router.post('/maze/move', async (req, res) => {
   const { userId, x, y } = req.body;
 
   if (!userId || x === undefined || y === undefined) {
     return res.status(400).json({ success: false, error: 'UserId, x a y jsou povinné' });
   }
 
-  const result = movePlayer(userId, x, y);
+  const result = await movePlayer(userId, x, y);
 
   if (!result.success) {
     return res.status(400).json(result);
@@ -50,9 +50,9 @@ router.post('/maze/move', (req, res) => {
 });
 
 // Získej statistiky uživatele
-router.get('/stats/:userId', (req, res) => {
+router.get('/stats/:userId', async (req, res) => {
   const { userId } = req.params;
-  const user = getUser(userId);
+  const user = await getUser(userId);
 
   if (!user) {
     return res.status(404).json({ success: false, error: 'Uživatel nenalezen' });

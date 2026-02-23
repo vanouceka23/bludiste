@@ -3,9 +3,9 @@
     "a": {
       "username": "a",
       "password": "$2b$10$7q7Ba1lkzIAZKwhmOJ.7c.FkveedtnNo1T.w1PQ3w6GVWgwSysZ12",
-      "completedMazes": 1000000009,
-      "deaths": 5,
-      "steps": 170
+      "completedMazes": 5015,
+      "deaths": 37,
+      "steps": 293
     },
     "b": {
       "username": "b",
@@ -13,6 +13,13 @@
       "completedMazes": 0,
       "deaths": 0,
       "steps": 0
+    },
+    "c": {
+      "username": "c",
+      "password": "$2b$10$dJG4He1r2IuFGTvPHsOO/eETGUZtVORmIIC.YTMQEPh/6Ku6gLCxe",
+      "completedMazes": 0,
+      "deaths": 1,
+      "steps": 9
     }
   }
 }
